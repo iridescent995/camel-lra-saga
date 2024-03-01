@@ -5,9 +5,29 @@ This code example shows how to configure LRA SAGA SERVICE using Apache Camel
 https://camel.apache.org/components/4.4.x/eips/saga-eip.html#_using_the_lra_saga_service
 
 ### Code Walkthrough 
+In this example we will create an tracking service, using Spring Boot and Apache Camel DSL. 
+We will create 1 route `direct:createTracking` with 2 saga routes for `compensation` and `completion`
 
+But before that while creating route definition, we need to configure **LRASagaService** 
 
+```
+        org.apache.camel.service.lra.LRASagaService sagaService = new org.apache.camel.service.lra.LRASagaService();
+        sagaService.setCoordinatorUrl("http://localhost:8080");
+        sagaService.setLocalParticipantUrl("http://0.0.0.0:8005");
+        getContext().addService(sagaService);
 
+```
+Few things to keep in mind:
+1. `setCoordinatorUrl` corresponds to host and port where LRA Coordinator is running.
+2. `setLocalParticipantUrl` corresponds to how LRA Coordination looks at the host. As you can see below while starting, LRA is listnening on host **0.0.0.0** and our service is running on port **8005**. Note: there is no context part for our endpoints, otherwise we need to include that too. 
+```
+__  ____  __  _____   ___  __ ____  ______
+ --/ __ \/ / / / _ | / _ \/ //_/ / / / __/
+ -/ /_/ / /_/ / __ |/ , _/ ,< / /_/ /\ \
+--\___\_\____/_/ |_/_/|_/_/|_|\____/___/
+2024-03-01 09:32:33,746 INFO  [io.quarkus] (main) lra-coordinator-quarkus 1.0.0-SNAPSHOT on JVM (powered by Quarkus 3.8.0) started in 1.085s. Listening on: http://0.0.0.0:8080
+2024-03-01 09:32:33,752 INFO  [io.quarkus] (main) Profile prod activated.
+```
 
 # How to Run this Application 
 This is a simple maven application, just clone the repo and open cmd and run:
@@ -25,12 +45,12 @@ mvn clean compile exec:java
 # How to Test the Application 
 Open postman and hit this **GET** endpoint:
 ```
-localhost:8006/createInventory
+localhost:8006/createTracking
 ```
-Note: By Default application run on **8006** port. Which can be changed under `application.yml` file
+Note: By Default application run on **8005** port. Which can be changed under `application.yml` file
 
 ```
 server:
-  port: 8006
+  port: 8005
 ```
 
