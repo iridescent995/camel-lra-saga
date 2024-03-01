@@ -22,7 +22,7 @@ You can run the application by running
 java -jar target/quarkus-app/quarkus-run.jar
 ```
 
-You will get something like this: 
+By default app runs on port **8080** .You will get something like this: 
 ```
 C:\Users\...\Desktop\Saga\LRA\lra-coordinator-quarkus-main>java -jar target/quarkus-app/quarkus-run.jar
 __  ____  __  _____   ___  __ ____  ______
@@ -139,5 +139,8 @@ server:
   port: 8005
 ```
 
+You can also check the running LRA client status in this URL
+
+http://localhost:8080/lra-coordinator
 
 
