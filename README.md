@@ -22,7 +22,7 @@ You can run the application by running
 java -jar target/quarkus-app/quarkus-run.jar
 ```
 
-You will something like this: 
+You will get something like this: 
 ```
 C:\Users\...\Desktop\Saga\LRA\lra-coordinator-quarkus-main>java -jar target/quarkus-app/quarkus-run.jar
 __  ____  __  _____   ___  __ ____  ______
