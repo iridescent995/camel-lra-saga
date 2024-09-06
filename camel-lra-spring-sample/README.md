@@ -19,6 +19,7 @@ mvn clean compile exec:java
 
 # How to Test the Application 
 
+## Starting LRA
 Open postman and hit this **GET** endpoint:
 ```
 localhost:8001/camel/createOrder
@@ -29,5 +30,27 @@ Note: By Default application run on **8001** port. Which can be changed under `a
 server:
   port: 8001
 ```
+on hitting this url in response you will get unique LRA id for this transaction, same needs to be passed to complete/cancel the LRA
+```
+Sample response: 
+Long-Running-Action:http://localhost:8080/lra-coordinator/0_ffffc0a80109_eae9_66d97349_167
+```
 
+## Completing LRA
+```
+localhost:8001/camel/completeOrder
+```
+in headers pass 
+```
+Long-Running-Action:http://localhost:8080/lra-coordinator/...someid...
+```
 
+## Cancel LRA
+
+```
+localhost:8001/camel/cancelOrder
+```
+in headers pass 
+```
+Long-Running-Action:http://localhost:8080/lra-coordinator/...someid...
+```
