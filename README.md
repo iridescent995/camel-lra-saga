@@ -1,6 +1,9 @@
 # camel-lra-saga
 This code example shows how to configure LRA SAGA SERVICE using Apache Camel
 
+<img width="707" alt="image" src="https://github.com/user-attachments/assets/852eb936-68e4-4b43-9491-27abc4542e33">
+
+
 ### Apache Camel Documentation 
 https://camel.apache.org/components/4.4.x/eips/saga-eip.html#_using_the_lra_saga_service
 
