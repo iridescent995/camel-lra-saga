@@ -1,6 +1,8 @@
 # Sample Application
 This code sample demos the LRA lifecycle. 
 
+<img width="707" alt="image" src="https://github.com/user-attachments/assets/c78e502f-36f6-4257-8104-a34e56c670e3">
+
 ### Pre requisite
 We need a running LRA Coordinator, to which our application can connect. To know more refer the root folder readme file. 
 
