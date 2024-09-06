@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:camel="http://camel.apache.org/schema/spring"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="
+          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring-4.3.0.xsd">
+
+    <bean id="sagaService" class="com.oracle.sagaorchestratorservice.service.SagaService"/>
+    <bean id="processLetterOfCreditDetails" class="com.oracle.sagaorchestratorservice.process.ProcessLetterOfCreditDetails"/>
+    <bean id="processPartyDetails" class="com.oracle.sagaorchestratorservice.process.ProcessPartyDetails"/>
+    <!--    <bean id="processCommonHandler" class="com.oracle.sagaorchestratorservice.process.ProcessCommonHandler"/>-->
+
+    <camel:camelContext id="camel-saga-context" xmlns="http://camel.apache.org/schema/spring">
+        <!--  Initiating Saga-->
+        <rest path="/createOrder">
+            <post consumes="application/json" produces="application/json">
+                <to uri="direct:startSaga"/>
+            </post>
+        </rest>
+        <rest path="/completeOrder">
+            <post consumes="application/json" produces="application/json">
+                <to uri="direct:operationCompleted"/>
+            </post>
+        </rest>
+        <rest path="/cancelOrder">
+            <post consumes="application/json" produces="application/json">
+                <to uri="direct:operationCanceled"/>
+            </post>
+        </rest>
+
+
+
+        <route id="initiate-saga">
+            <from uri="direct:startSaga"/>
+            <log message="Initiating saga..."/>
+            <saga>
+                <timeout duration="2000000"/>
+                <to uri="direct:process"/>
+                <to uri="direct:newPayment"/>
+                <to uri="direct:newShipping"/>
+            </saga>
+        </route>
+
+
+        <!--  new order  logic-->
+        <route id="newOrder">
+            <from uri="direct:newOrder"/>
+            <log message="Processing order..."/>
+            <saga>
+                <compensation uri="direct:cancelOrder"/>
+                <completion uri="direct:completeSaga"/>
+                <transform>
+                    <header>Exchange.SAGA_LONG_RUNNING_ACTION</header>
+                </transform>
+                <bean ref="orderService" method="createOrder"/>
+            </saga>
+        </route>
+
+        <!--   Route to be called on completion -->
+        <route id="completeOrder">
+            <from uri="direct:completeOrder"/>
+            <transform>
+                <header>Exchange.SAGA_LONG_RUNNING_ACTION</header>
+            </transform>
+            <bean ref="orderService" method="completeSaga"/>
+        </route>
+
+        <!--
+        other routes
+        .....
+        -->
+
+    </camel:camelContext>
+</beans>

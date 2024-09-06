@@ -1,0 +1,15 @@
+server:
+  port: 8001
+camel:
+  servlet:
+    mapping:
+      enabled: true
+  lra:
+    enabled: true
+    coordinator-url: http://localhost:8080
+    local-participant-url: http://localhost:8001/camel
+  service:
+    lra.enabled: true
+  springboot:
+    main-run-controller: true
+    name: Camel-saga
